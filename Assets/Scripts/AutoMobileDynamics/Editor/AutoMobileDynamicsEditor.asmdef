@@ -1,6 +1,8 @@
 {
     "name": "AutoMobileDynamicsEditor",
-    "references": [],
+    "references": [
+        "AutoMobileDynamics"
+    ],
     "optionalUnityReferences": [],
     "includePlatforms": [
         "Editor"

@@ -1,8 +1,7 @@
 {
-    "name": "AutoMobileDynamics",
+    "name": "TopDownCarBattle",
     "references": [
-        "Graphene.InputManager",
-        "Graphene.Utils"
+        "AutoMobileDynamics"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

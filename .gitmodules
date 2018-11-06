@@ -1,0 +1,6 @@
+[submodule "Packages/Input"]
+	path = Packages/Input
+	url = git@github.com:YuriAICruz/Unity-InputManager.git
+[submodule "Packages/Util"]
+	path = Packages/Util
+	url = git@github.com:YuriAICruz/Unity-Utils.git
