@@ -14,7 +14,7 @@ namespace Graphene.AutoMobileDynamics
         {
             foreach (var wheel in FrontWheels)
             {
-                wheel.transform.rotation = Quaternion.Euler(0, MaxAngle * dirX, 0);
+                wheel.transform.localRotation = Quaternion.Euler(0, MaxAngle * dirX, 0);
             }
         }
     }

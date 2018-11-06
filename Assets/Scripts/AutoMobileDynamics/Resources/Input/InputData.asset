@@ -32,7 +32,7 @@ MonoBehaviour:
     Id: 11
   - hint: Brake Down
     Combo:
-    - input: 0
+    - input: 4
       betweenMaxTime: 1.2
       betweenMinTime: 0.2
       down: 1
@@ -41,7 +41,7 @@ MonoBehaviour:
     Id: 15
   - hint: Brake Up
     Combo:
-    - input: 0
+    - input: 4
       betweenMaxTime: 1.2
       betweenMinTime: 0.2
       down: 0

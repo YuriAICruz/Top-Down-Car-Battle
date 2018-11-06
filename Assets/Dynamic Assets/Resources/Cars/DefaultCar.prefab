@@ -1353,6 +1353,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Physics:
     Mass: 0
+    Traction: 20
     FrontWheelSize: 0.34
     BackWheelSize: 0.38
     CarMass: {fileID: 65767419172582420}
@@ -1361,11 +1362,17 @@ MonoBehaviour:
     - {x: -1, y: 0.339, z: 1.218}
     - {x: 1, y: 0.379, z: -1.618}
     - {x: -1, y: 0.379, z: -1.618}
+    TopSpeed: 1
+    DriftAngle: 5
+    DriftTraction: 100
+    Acceleration: 1.2
+    Velocity: 0
+    AngleDrag: 50
   Steering:
     FrontWheels:
     - {fileID: 4020522435132996}
     - {fileID: 4505705345159074}
-    MaxAngle: 60
+    MaxAngle: 30
 --- !u!198 &198295167704646626
 ParticleSystem:
   m_ObjectHideFlags: 1
