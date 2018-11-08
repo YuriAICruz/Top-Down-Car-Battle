@@ -32,7 +32,7 @@ namespace TopDownCarBattle
                 * Time.deltaTime * RotationSpeed
                 ;
 
-            //transform.LookAt(_lookPosition);
+            transform.LookAt(_lookPosition);
 
             transform.position += (-transform.position + _position) * Time.deltaTime * Speed;
         }

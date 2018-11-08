@@ -67,13 +67,14 @@ namespace Graphene.AutoMobileDynamics.Physics
             // P = mgh
             // Weight = Wd => Wd = Fh / R
 
-            if (gas < 0 && Velocity.magnitude > 0)
+            if (gas < 0 && Vector3.Dot(Velocity.normalized, _transform.forward) > 0)
                 gas = -2;
 
             var fwd = _transform.forward;
             var vRatio = Mathf.Abs(Velocity.magnitude / TopSpeed);
             _speedRatio = vRatio;
-            
+            dir *= (1 - vRatio);
+
             var _a = Acceleration * (1 - Mathf.Pow(vRatio, 0.5f)) * gas;
 
             Velocity += (fwd).normalized * _a * Time.deltaTime - Velocity.normalized * Drag * TopSpeed * Time.deltaTime;
@@ -91,25 +92,29 @@ namespace Graphene.AutoMobileDynamics.Physics
             var offset = Vector3.zero;
             if (dir > 0)
             {
-                offset = CalculateSlip(dir, vRatio, backslip, Axes[0], Axes[2], Axes[1]);
+                offset = CalculateSlip(dir, backslip, Axes[0], Axes[2], Axes[1]);
             }
             else if (dir < 0)
             {
-                offset = CalculateSlip(dir, vRatio, backslip, Axes[1], Axes[3], Axes[0]);
+                offset = CalculateSlip(dir, backslip, Axes[1], Axes[3], Axes[0]);
             }
 
-            var directionVelocityAngle = Vector3.SignedAngle(Velocity.normalized, Vector3.Angle(Velocity.normalized, fwd) > 90 ? -fwd : fwd, _transform.up);
+            var moveDir = Vector3.Angle(Velocity.normalized, fwd) > 90 ? -fwd : fwd;
 
+            var directionVelocityAngle = Vector3.SignedAngle(Velocity.normalized, moveDir, _transform.up);
+
+#if UNITY_EDITOR
             Debug.DrawRay(_position, Velocity.normalized * 10, Color.blue);
             Debug.DrawRay(_position, Quaternion.AngleAxis(directionVelocityAngle, _transform.up) * Velocity.normalized * 10, Color.green);
+#endif
 
-            Velocity = Quaternion.AngleAxis(directionVelocityAngle * Handling * (Mathf.Pow(1 -_speedRatio, 6)), _transform.up) *
-                       (Velocity -  Velocity.normalized * Vector3.Angle(Velocity.normalized, fwd) / 90);
+            Velocity = Quaternion.AngleAxis(directionVelocityAngle * Handling * (Mathf.Pow(1 - _speedRatio, 4)), _transform.up) *
+                       (Velocity - Velocity.normalized * Vector3.Angle(Velocity.normalized, moveDir) / 90);
 
             _position += Velocity * Time.deltaTime; //+ offset;
         }
 
-        Vector3 CalculateSlip(float dir, float vRatio, Vector3 backslip, Vector3 a, Vector3 b, Vector3 c)
+        Vector3 CalculateSlip(float dir, Vector3 backslip, Vector3 a, Vector3 b, Vector3 c)
         {
             var right = Vector3.Cross(Velocity.normalized, _transform.up); //_transform.right
             var offset = Vector3.zero;
@@ -125,16 +130,39 @@ namespace Graphene.AutoMobileDynamics.Physics
                 _transform.RotateAround(
                     v,
                     Vector3.up,
-                    dir * Angle * vRatio
+                    dir * Angle * _speedRatio
                 );
                 offset = _transform.position - last;
 
+#if UNITY_EDITOR
                 Debug.DrawLine(a, v, Color.red);
                 Debug.DrawLine(b, v, Color.red);
                 Debug.DrawLine(c, v, Color.red);
+#endif
             }
 
             return offset;
+        }
+
+        public void OnCollisionEnter(Collision other)
+        {
+            _position -= other.contacts[0].normal * other.contacts[0].separation;
+            
+            Velocity = Vector3.Reflect(Velocity.normalized, other.contacts[0].normal) * Velocity.magnitude;
+        }
+
+        public void OnCollisionEnter(Collider other)
+        {
+#if UNITY_EDITOR
+            Debug.Log("Trigger Collision: " + other.transform.gameObject);
+#endif
+
+            Velocity = Vector3.zero;
+        }
+
+        public void OnCollisionStay(Collision other)
+        {
+            _position -= other.contacts[0].normal * other.contacts[0].separation;
         }
     }
 }

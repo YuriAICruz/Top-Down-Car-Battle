@@ -4,6 +4,7 @@ using UnityEngine;
 namespace Graphene.AutoMobileDynamics
 {
     [RequireComponent(typeof(BoxCollider))]
+    [RequireComponent(typeof(Rigidbody))]
     public class Car : MonoBehaviour
     {
         public AutoPhysics Physics;
@@ -29,6 +30,31 @@ namespace Graphene.AutoMobileDynamics
             Steering.Steer(dir.x);
 
             transform.position = Physics.Update(dir.x, dir.y);
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            Physics.OnCollisionEnter(other);
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            
+        }
+
+        private void OnCollisionEnter(Collision other)
+        {
+            Physics.OnCollisionEnter(other);
+        }
+
+        private void OnCollisionStay(Collision other)
+        {
+            Physics.OnCollisionStay(other);
+        }
+
+        private void OnCollisionExit(Collision other)
+        {
+            
         }
     }
 }
