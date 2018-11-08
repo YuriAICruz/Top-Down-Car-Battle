@@ -1,7 +1,8 @@
 {
     "name": "AutoMobileDynamicsEditor",
     "references": [
-        "AutoMobileDynamics"
+        "AutoMobileDynamics",
+        "Graphene.Utils"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [

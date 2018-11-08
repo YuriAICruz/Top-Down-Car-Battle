@@ -9,7 +9,8 @@ namespace TopDownCarBattle
     {
         public Car Target;
         private Vector3 _position;
-        public float Speed = 3;
+        public float Speed;
+        public float RotationSpeed;
 
         public Vector3 Offset;
         private Vector3 _lookPosition;
@@ -19,14 +20,19 @@ namespace TopDownCarBattle
             if (Target == null)
                 Target = FindObjectOfType<Car>();
             _position = transform.position + Target.transform.TransformPoint(Offset);
-            _lookPosition = Target.transform.position +Target.transform.forward*2+ Target.transform.forward * Target.Physics.Velocity*5;
+            _lookPosition = Target.transform.position + Target.transform.forward * 2 + Target.transform.forward;
         }
 
         private void Update()
         {
             _position = Target.transform.TransformPoint(Offset);
-            _lookPosition += (-_lookPosition + Target.transform.position +Target.transform.forward*2+ Target.transform.forward * Target.Physics.Velocity) * Time.deltaTime * Speed*2; 
-            transform.LookAt(_lookPosition);
+            var v = Target.Physics.Velocity;
+            _lookPosition +=
+                (-_lookPosition + Target.transform.position + Target.Physics.Velocity.normalized * 10)
+                * Time.deltaTime * RotationSpeed
+                ;
+
+            //transform.LookAt(_lookPosition);
 
             transform.position += (-transform.position + _position) * Time.deltaTime * Speed;
         }

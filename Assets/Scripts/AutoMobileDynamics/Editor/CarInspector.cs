@@ -1,4 +1,5 @@
 ﻿using Graphene.AutoMobileDynamics.Physics;
+using Graphene.Utils;
 using UnityEditor;
 using UnityEngine;
 
@@ -23,8 +24,8 @@ namespace Graphene.AutoMobileDynamics
 
         private void OnSceneGUI()
         {
-            if(_editAxes)
-            DrawAxis();
+            if (_editAxes)
+                DrawAxis();
         }
 
         public override void OnInspectorGUI()
@@ -39,9 +40,9 @@ namespace Graphene.AutoMobileDynamics
             CheckAxes();
 
             _editAxes = EditorGUILayout.Toggle("Edit Axes:", _editAxes);
-            
-            if(!_editAxes) return;
-            
+
+            if (!_editAxes) return;
+
             var w = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = 18;
             for (int i = 0; i < _self.Physics.Axes.Length; i += 2)
@@ -81,6 +82,25 @@ namespace Graphene.AutoMobileDynamics
                 }
                 Handles.DrawWireDisc(_self.transform.TransformPoint(_self.Physics.Axes[i]), Vector3.right, i == 0 ? _self.Physics.FrontWheelSize : _self.Physics.BackWheelSize);
                 Handles.DrawWireDisc(_self.transform.TransformPoint(_self.Physics.Axes[i + 1]), Vector3.right, i == 0 ? _self.Physics.FrontWheelSize : _self.Physics.BackWheelSize);
+            }
+
+
+            var axisdir = Quaternion.AngleAxis(_self.Physics.Angle, _self.transform.up) * _self.transform.right;
+            
+            var backslip = _self.transform.right;
+            
+            var a = _self.transform.TransformPoint(_self.Physics.Axes[0]);
+            var b = _self.transform.TransformPoint(_self.Physics.Axes[2]);
+            var c = _self.transform.TransformPoint(_self.Physics.Axes[1]);
+            
+            Vector3 v;
+            if (a.Intersection(axisdir, b, backslip, out v))
+            {
+                //v = _self.transform.TransformPoint(v);
+                Handles.DrawLine(a, v);
+                Handles.DrawLine(b, v);
+                Handles.DrawLine(c, v);
+                Handles.DrawWireDisc(v, _self.transform.up, (c - v).magnitude);
             }
         }
     }

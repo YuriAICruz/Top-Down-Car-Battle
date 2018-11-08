@@ -14,23 +14,21 @@ namespace Graphene.AutoMobileDynamics
         private void Awake()
         {
             Physics.SetPosition(transform);
+            Steering.Physics = Physics;
+            Steering.Transform = transform;
             
             _input = new Input();
 
-            _input.LeftStick += Steer;
-            _input.GasOn += Physics.GasOn;
-            _input.GasOff += Physics.GasOff;
-            _input.BrakeOn += Physics.BrakeOn;
-            _input.BrakeOff += Physics.BrakeOff;
+            _input.LeftStick += Mootion;
             
             _input.Init();
         }
 
-        private void Steer(Vector2 dir)
+        private void Mootion(Vector2 dir)
         {
             Steering.Steer(dir.x);
 
-            transform.position = Physics.Update(dir.x);
+            transform.position = Physics.Update(dir.x, dir.y);
         }
     }
 }

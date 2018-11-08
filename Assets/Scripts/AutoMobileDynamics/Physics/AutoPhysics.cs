@@ -1,4 +1,5 @@
 ﻿using System;
+using Graphene.Utils;
 using UnityEngine;
 
 namespace Graphene.AutoMobileDynamics.Physics
@@ -8,7 +9,7 @@ namespace Graphene.AutoMobileDynamics.Physics
     {
         [HideInInspector] public BoxCollider CarMass;
         [HideInInspector] public Vector3[] Axes;
-        [HideInInspector] public float Velocity;
+        public Vector3 Velocity;
 
         [Header("Body")] public float Mass;
         public float FrontWheelSize = 0.2f;
@@ -16,18 +17,27 @@ namespace Graphene.AutoMobileDynamics.Physics
 
         [Header("Handling Attributes")] public float TopSpeed = 3;
         public float Acceleration = 2;
+        [Range(0, 1)] public float Handling = 0.01f;
+        [Range(0.01f, 0.99f)] public float Drag = 0.2f;
         [Space] public float Traction = 1;
         public float DriftAngle;
         public float AngleDrag = 10;
+        public float Angle;
+
+        public Vector3 MassShift;
 
         private Vector3 _position;
         private float _lastGasTime;
         private float _lastBrakeTime;
-        private float _gas;
         private Transform _transform;
         private float _angleVelocity;
         private float _lastAngle;
         private float _speedRatio;
+
+        void Awake()
+        {
+            Velocity = Vector3.zero;
+        }
 
         public void SetPosition(Transform transform)
         {
@@ -35,98 +45,96 @@ namespace Graphene.AutoMobileDynamics.Physics
             _transform = transform;
         }
 
-        public void GasOn()
+        public Vector3 Update(float dir, float gas)
         {
-            _lastGasTime = Time.time;
-            _gas = 1;
-        }
-
-        public void GasOff()
-        {
-            _gas = 0;
-        }
-
-        public void BrakeOn()
-        {
-            _lastBrakeTime = Time.time;
-            _gas = -1f;
-        }
-
-        public void BrakeOff()
-        {
-            _gas = 0;
-        }
-
-        public Vector3 Update(float dir)
-        {
-            CalcVelocity();
-
-            var mAxis = _transform.TransformPoint(Axes[1] + (Axes[0] - Axes[1]) / 2);
-
-            var currentDir = _transform.forward;
-
-            _speedRatio = Mathf.Sin(Velocity / TopSpeed * Mathf.PI * 0.5f);
-
-            var angle = dir * _speedRatio * Traction * Time.deltaTime * Mathf.PI;
-            var angleOffset = angle;
-            _lastAngle = angle;
-
-            _angleVelocity += angleOffset * Time.deltaTime * Velocity * AngleDrag;
-            ClampAngleVelocity();
-
-            var last = _transform.position;
-            _transform.RotateAround(
-                mAxis,
-                Vector3.up,
-                angle
-            );
-
-            currentDir.y = 0;
-            currentDir.Normalize();
-
-            var translationDirection = Quaternion.AngleAxis(_angleVelocity, Vector3.up) * currentDir;
-
-            Debug.DrawRay(
-                mAxis,
-                Quaternion.AngleAxis(_angleVelocity * 10, Vector3.up) * currentDir * 10,
-                Mathf.Abs(_angleVelocity) > DriftAngle ? Color.red : Color.magenta,
-                1
-            );
-
-
-            if (Mathf.Abs(_angleVelocity) > DriftAngle)
-            {
-                _transform.RotateAround(
-                    mAxis,
-                    Vector3.up,
-                    _angleVelocity * 0.5f
-                );
-
-                Velocity = Mathf.Max(0, Mathf.Abs(Velocity) - Time.deltaTime*0.2f) * Mathf.Sign(Velocity);
-            }
-
-            var offset = _transform.position - last;
-            _position += offset + (translationDirection.normalized) * Velocity;
+            CalculatePosition_M2(dir, gas);
+            //CalculatePosition_M1(dir);
 
             return _position;
         }
 
-        private void CalcVelocity()
+        private void CalculatePosition_M2(float dir, float gas)
         {
-            Velocity += _gas * Time.deltaTime * Acceleration;
-            Velocity = Mathf.Min(Velocity, TopSpeed);
-            ClampVelocity();
+            // v = at
+            // F = ma
+            // I = Ft => I = mat => I = mv
+            // a = dv / t = 2v/t = 2v / (pi / v) = (2/pi) pow(v, 2) / R
+            // a = pow(v,2) / R
+            // F = m pow(v,2) / R
+            // Torque = T => T = Fd
+            // W = fd
+            // W = Fd = mad = ma(1/2 a pow(t,2) ) = 1/2 m pow(at,2) = 1/2 m pow(v, 2)
+            // P = mgh
+            // Weight = Wd => Wd = Fh / R
+
+            if (gas < 0 && Velocity.magnitude > 0)
+                gas = -2;
+
+            var fwd = _transform.forward;
+            var vRatio = Mathf.Abs(Velocity.magnitude / TopSpeed);
+            _speedRatio = vRatio;
+            
+            var _a = Acceleration * (1 - Mathf.Pow(vRatio, 0.5f)) * gas;
+
+            Velocity += (fwd).normalized * _a * Time.deltaTime - Velocity.normalized * Drag * TopSpeed * Time.deltaTime;
+
+            if (Velocity.magnitude < 0.2f)
+                Velocity = Vector3.zero;
+
+            MassShift = new Vector3(-dir * vRatio, 0, -(_a / Acceleration));
+
+            var rearAxis = _transform.TransformPoint(Axes[2] + (Axes[3] - Axes[2]) * 0.5f);
+            var frontAxis = _transform.TransformPoint(Axes[0] + (Axes[1] - Axes[0]) * 0.5f);
+
+            var backslip = _transform.right; // Quaternion.AngleAxis(MassShift.x, _transform.up) * _transform.right; 
+
+            var offset = Vector3.zero;
+            if (dir > 0)
+            {
+                offset = CalculateSlip(dir, vRatio, backslip, Axes[0], Axes[2], Axes[1]);
+            }
+            else if (dir < 0)
+            {
+                offset = CalculateSlip(dir, vRatio, backslip, Axes[1], Axes[3], Axes[0]);
+            }
+
+            var directionVelocityAngle = Vector3.SignedAngle(Velocity.normalized, Vector3.Angle(Velocity.normalized, fwd) > 90 ? -fwd : fwd, _transform.up);
+
+            Debug.DrawRay(_position, Velocity.normalized * 10, Color.blue);
+            Debug.DrawRay(_position, Quaternion.AngleAxis(directionVelocityAngle, _transform.up) * Velocity.normalized * 10, Color.green);
+
+            Velocity = Quaternion.AngleAxis(directionVelocityAngle * Handling * (Mathf.Pow(1 -_speedRatio, 6)), _transform.up) *
+                       (Velocity -  Velocity.normalized * Vector3.Angle(Velocity.normalized, fwd) / 90);
+
+            _position += Velocity * Time.deltaTime; //+ offset;
         }
 
-        private void ClampVelocity()
+        Vector3 CalculateSlip(float dir, float vRatio, Vector3 backslip, Vector3 a, Vector3 b, Vector3 c)
         {
-            Velocity = Mathf.Max(0, Mathf.Abs(Velocity) - Time.deltaTime) * Mathf.Sign(Velocity);
-        }
+            var right = Vector3.Cross(Velocity.normalized, _transform.up); //_transform.right
+            var offset = Vector3.zero;
+            a = _transform.TransformPoint(a);
+            b = _transform.TransformPoint(b);
+            c = _transform.TransformPoint(c);
 
-        private void ClampAngleVelocity()
-        {
-            _angleVelocity = Mathf.Max(0, Mathf.Abs(_angleVelocity) - Time.deltaTime * (1 - _speedRatio + 1) * 20) * Mathf.Sign(_angleVelocity);
-            _angleVelocity = Mathf.Min(10, Mathf.Abs(_angleVelocity)) * Mathf.Sign(_angleVelocity);
+            var axisdir = Quaternion.AngleAxis(dir * Angle, _transform.up) * right;
+            Vector3 v;
+            if (a.Intersection(axisdir, b, backslip, out v))
+            {
+                var last = _transform.position;
+                _transform.RotateAround(
+                    v,
+                    Vector3.up,
+                    dir * Angle * vRatio
+                );
+                offset = _transform.position - last;
+
+                Debug.DrawLine(a, v, Color.red);
+                Debug.DrawLine(b, v, Color.red);
+                Debug.DrawLine(c, v, Color.red);
+            }
+
+            return offset;
         }
     }
 }

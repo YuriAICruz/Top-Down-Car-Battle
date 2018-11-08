@@ -2,7 +2,8 @@
     "name": "AutoMobileDynamics",
     "references": [
         "Graphene.InputManager",
-        "Graphene.Utils"
+        "Graphene.Utils",
+        "Graphene.UiGenerics"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

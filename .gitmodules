@@ -4,3 +4,6 @@
 [submodule "Packages/Util"]
 	path = Packages/Util
 	url = git@github.com:YuriAICruz/Unity-Utils.git
+[submodule "Packages/UI-Generics"]
+	path = Packages/UI-Generics
+	url = git@github.com:YuriAICruz/Unity-UI-Generics.git
