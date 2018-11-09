@@ -24,6 +24,8 @@ namespace Graphene.AutoMobileDynamics.Physics
         public float AngleDrag = 10;
         public float Angle;
 
+        public LayerMask HeightMask;
+
         public Vector3 MassShift;
 
         private Vector3 _position;
@@ -67,6 +69,12 @@ namespace Graphene.AutoMobileDynamics.Physics
             // P = mgh
             // Weight = Wd => Wd = Fh / R
 
+
+            var rearAxis = _transform.TransformPoint(Axes[2] + (Axes[3] - Axes[2]) * 0.5f);
+            var frontAxis = _transform.TransformPoint(Axes[0] + (Axes[1] - Axes[0]) * 0.5f);
+
+            CheckHeight(frontAxis, rearAxis);
+
             if (gas < 0 && Vector3.Dot(Velocity.normalized, _transform.forward) > 0)
                 gas = -2;
 
@@ -83,9 +91,6 @@ namespace Graphene.AutoMobileDynamics.Physics
                 Velocity = Vector3.zero;
 
             MassShift = new Vector3(-dir * vRatio, 0, -(_a / Acceleration));
-
-            var rearAxis = _transform.TransformPoint(Axes[2] + (Axes[3] - Axes[2]) * 0.5f);
-            var frontAxis = _transform.TransformPoint(Axes[0] + (Axes[1] - Axes[0]) * 0.5f);
 
             var backslip = _transform.right; // Quaternion.AngleAxis(MassShift.x, _transform.up) * _transform.right; 
 
@@ -112,6 +117,90 @@ namespace Graphene.AutoMobileDynamics.Physics
                        (Velocity - Velocity.normalized * Vector3.Angle(Velocity.normalized, moveDir) / 90);
 
             _position += Velocity * Time.deltaTime; //+ offset;
+        }
+
+        private float _gravity;
+
+        private void CheckHeight(Vector3 frontAxis, Vector3 rearAxis)
+        {
+            RaycastHit hitF, hitR;
+
+            var calcF = UnityEngine.Physics.Raycast(frontAxis + _transform.up * 6, -_transform.up, out hitF, 6 + FrontWheelSize, HeightMask);
+            var calcR = UnityEngine.Physics.Raycast(rearAxis + _transform.up * 6, -_transform.up, out hitR, 6 + BackWheelSize, HeightMask);
+
+            var tol = 0.1f;
+            var last = _transform.position;
+            if (calcF && calcR)
+            {
+                var f = hitF.point + _transform.up * FrontWheelSize;
+                var r = hitR.point + _transform.up * BackWheelSize;
+
+                if (Mathf.Abs(_position.y - (hitR.point.y + hitF.point.y) / 2) > tol)
+                {
+                    _position.y = (hitR.point.y + hitF.point.y) / 2;
+                }
+
+                if (hitR.point.y > hitF.point.y)
+                {
+                    _transform.RotateAround(
+                        frontAxis,
+                        _transform.right,
+                        Vector3.SignedAngle(r - f, -_transform.forward, -_transform.right)
+                    );
+                }
+                else
+                {
+                    _transform.RotateAround(
+                        rearAxis,
+                        _transform.right,
+                        Vector3.SignedAngle(f - r, _transform.forward, -_transform.right)
+                    );
+                }
+            }
+
+            else if (calcF)
+            {
+                var p = hitF.point + _transform.up * FrontWheelSize;
+
+                if (Mathf.Abs(_position.y - hitF.point.y) > tol)
+                {
+                    _position.y = hitF.point.y;
+                }
+
+
+                _transform.RotateAround(
+                    rearAxis,
+                    _transform.right,
+                    Vector3.SignedAngle(p - rearAxis, _transform.forward, -_transform.right)
+                );
+            }
+            else if (calcR)
+            {
+                var p = hitR.point + _transform.up * BackWheelSize;
+
+                if (Mathf.Abs(_position.y - hitR.point.y) > tol)
+                {
+                    _position.y = hitR.point.y;
+                }
+
+                _transform.RotateAround(
+                    frontAxis,
+                    _transform.right,
+                    Vector3.SignedAngle(p - frontAxis, -_transform.forward, -_transform.right)
+                );
+            }
+            else
+            {
+                Debug.DrawRay(frontAxis + _transform.up * 3, -_transform.up * 3, Color.cyan);
+                Debug.DrawRay(rearAxis + _transform.up * 3, -_transform.up * 3, Color.cyan);
+                _gravity += UnityEngine.Physics.gravity.y * Time.deltaTime;
+                Mathf.Min(_gravity, 1);
+                _position += Vector3.up * _gravity;
+                return;
+            }
+
+            _position += _transform.position - last;
+            _gravity = 0;
         }
 
         Vector3 CalculateSlip(float dir, Vector3 backslip, Vector3 a, Vector3 b, Vector3 c)
@@ -147,7 +236,7 @@ namespace Graphene.AutoMobileDynamics.Physics
         public void OnCollisionEnter(Collision other)
         {
             _position -= other.contacts[0].normal * other.contacts[0].separation;
-            
+
             Velocity = Vector3.Reflect(Velocity.normalized, other.contacts[0].normal) * Velocity.magnitude;
         }
 

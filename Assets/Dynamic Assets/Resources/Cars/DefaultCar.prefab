@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4860071610157242}
   - component: {fileID: 198295167704646626}
   - component: {fileID: 199897804479600900}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: ParticleBurnoutSmoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 4986321740057552}
   - component: {fileID: 33499357038860768}
   - component: {fileID: 23961572162557262}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: SkyCarSuspensionFrontRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54,7 +54,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4904803305072828}
   - component: {fileID: 96169075725904612}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: WheelHubRearLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ GameObject:
   - component: {fileID: 4504001487183862}
   - component: {fileID: 33291143354721238}
   - component: {fileID: 23820950872823244}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: SkyCarBodyParts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 4020522435132996}
   - component: {fileID: 33451058353130346}
   - component: {fileID: 23984367295726734}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: SkyCarWheelFrontRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 4853170713031452}
   - component: {fileID: 33863811906268460}
   - component: {fileID: 23473546897563380}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: SkyCarUndercarriage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,7 +121,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4192881685686756}
   - component: {fileID: 114431341660426062}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Movable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 4335957449823788}
   - component: {fileID: 33085185185466424}
   - component: {fileID: 23974224952875472}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: SkyCarWheelRearRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -155,7 +155,7 @@ GameObject:
   - component: {fileID: 4609198490886676}
   - component: {fileID: 33418596917284488}
   - component: {fileID: 23643939330509972}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: SkyCarBodyPaintwork
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -172,7 +172,7 @@ GameObject:
   - component: {fileID: 4966116294791512}
   - component: {fileID: 33608860868791782}
   - component: {fileID: 23791975754672322}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: SkyCarMudGuardFrontLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 4061580246521950}
   - component: {fileID: 33205440069584026}
   - component: {fileID: 23897497198407748}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: SkyCarWheelRearLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -205,7 +205,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4998664912407402}
   - component: {fileID: 96748834302483760}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: WheelHubRearRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -221,7 +221,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4527479525390988}
   - component: {fileID: 108163416618738798}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: HeadlighRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -236,7 +236,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4029272490330364}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: WheelHubFrontLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -254,7 +254,7 @@ GameObject:
   - component: {fileID: 54522155345231592}
   - component: {fileID: 65767419172582420}
   - component: {fileID: 114349414285892810}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: DefaultCar
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -271,7 +271,7 @@ GameObject:
   - component: {fileID: 4565455205257712}
   - component: {fileID: 33070367029689450}
   - component: {fileID: 23458821604288402}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: SkyCarHeadlightsGlow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -288,7 +288,7 @@ GameObject:
   - component: {fileID: 4946969650168504}
   - component: {fileID: 33973143717547174}
   - component: {fileID: 23991161947965002}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: SkyCarMudGuardFrontRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -303,7 +303,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4284760165796218}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: WheelHubFrontRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -320,7 +320,7 @@ GameObject:
   - component: {fileID: 4857429614514272}
   - component: {fileID: 33032619699279470}
   - component: {fileID: 23496910495446706}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: SkyCarSuspensionFrontLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -335,7 +335,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4156469464990778}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: SkyCar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -352,7 +352,7 @@ GameObject:
   - component: {fileID: 4505705345159074}
   - component: {fileID: 33929730184227258}
   - component: {fileID: 23407528488939920}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: SkyCarWheelFrontLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -368,7 +368,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4053769539033458}
   - component: {fileID: 108327696289183472}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: HeadlightLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -385,7 +385,7 @@ GameObject:
   - component: {fileID: 4402989241342430}
   - component: {fileID: 33262663389565062}
   - component: {fileID: 23077709160215124}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: SkyCarBrakelightsGlow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -634,7 +634,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1569362061240900}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -5.76}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4156469464990778}
@@ -1293,7 +1293,7 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1569362061240900}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1.88, y: 0.76, z: 3.64}
@@ -1576,7 +1576,7 @@ MonoBehaviour:
     - {x: -1, y: 0.379, z: -1.618}
     Velocity: {x: 0, y: 0, z: 0}
     Mass: 0
-    FrontWheelSize: 0.34
+    FrontWheelSize: 0.38
     BackWheelSize: 0.38
     TopSpeed: 120
     Acceleration: 60
@@ -1586,6 +1586,9 @@ MonoBehaviour:
     DriftAngle: 8
     AngleDrag: 10
     Angle: 16
+    HeightMask:
+      serializedVersion: 2
+      m_Bits: 256
     MassShift: {x: 0, y: 0, z: 0}
   Steering:
     Physics:
@@ -1603,6 +1606,9 @@ MonoBehaviour:
       DriftAngle: 0
       AngleDrag: 10
       Angle: 0
+      HeightMask:
+        serializedVersion: 2
+        m_Bits: 0
       MassShift: {x: 0, y: 0, z: 0}
     Transform: {fileID: 0}
     FrontWheels:
