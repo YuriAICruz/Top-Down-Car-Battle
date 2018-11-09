@@ -1586,8 +1586,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c88a11e2133c4b4d9783c6488d255b29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WeaponMounts:
-  - {x: 0.76, y: 1.38, z: 0.7}
 --- !u!114 &114349414285892810
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1657,6 +1655,9 @@ MonoBehaviour:
     - {fileID: 96748834302483760}
     - {fileID: 96169075725904612}
     WheelSpeed: 10
+  WeaponMounts:
+  - {x: -0.5404611, y: 0.80476975, z: 1.4588594}
+  - {x: 0.51868165, y: 0.8040339, z: 1.461319}
 --- !u!114 &114431341660426062
 MonoBehaviour:
   m_ObjectHideFlags: 1

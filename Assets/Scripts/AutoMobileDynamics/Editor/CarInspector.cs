@@ -10,7 +10,7 @@ namespace Graphene.AutoMobileDynamics
     {
         private Car _self;
 
-        private bool _editAxes;
+        private bool _editAxes, _editMounts;
 
         private void Awake()
         {
@@ -26,6 +26,9 @@ namespace Graphene.AutoMobileDynamics
         {
             if (_editAxes)
                 DrawAxis();
+
+            if (_editMounts)
+                DrawMounts();
         }
 
         public override void OnInspectorGUI()
@@ -33,6 +36,8 @@ namespace Graphene.AutoMobileDynamics
             base.OnInspectorGUI();
 
             CarAxesSetup();
+
+            MountsSetup();
         }
 
         private void CarAxesSetup()
@@ -54,6 +59,21 @@ namespace Graphene.AutoMobileDynamics
                 EditorGUILayout.EndHorizontal();
             }
             EditorGUIUtility.labelWidth = w;
+        }
+
+        private void MountsSetup()
+        {
+            _editMounts = EditorGUILayout.Toggle("Edit Mounts:", _editMounts);
+            
+            if (!_editMounts) return;
+            
+            CheckMounts();
+            
+            EditorGUILayout.Space();
+            for (int i = 0; i < _self.WeaponMounts.Length; i ++)
+            {
+                _self.WeaponMounts[i] = EditorGUILayout.Vector3Field("Mount " + i.ToString() + ":", _self.WeaponMounts[i]);
+            }
         }
 
         private void CheckAxes()
@@ -101,6 +121,31 @@ namespace Graphene.AutoMobileDynamics
                 Handles.DrawLine(b, v);
                 Handles.DrawLine(c, v);
                 Handles.DrawWireDisc(v, _self.transform.up, (c - v).magnitude);
+            }
+        }
+
+        private void CheckMounts()
+        {
+            if (_self.WeaponMounts == null || _self.WeaponMounts.Length < 2)
+            {
+                _self.WeaponMounts = new Vector3[2];
+            }
+        }
+        
+        private void DrawMounts()
+        {
+            CheckMounts();
+            
+            for (int i = 0; i < _self.WeaponMounts.Length; i ++)
+            {
+                EditorGUI.BeginChangeCheck();
+                var axis = Handles.DoPositionHandle(_self.transform.TransformPoint(_self.WeaponMounts[i]), _self.transform.rotation);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    Undo.RecordObject(target, "MountMoved");
+
+                    _self.WeaponMounts[i] = _self.transform.InverseTransformPoint(axis);
+                }
             }
         }
     }

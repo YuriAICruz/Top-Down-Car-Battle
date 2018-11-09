@@ -10,6 +10,8 @@ namespace Graphene.AutoMobileDynamics
         public AutoPhysics Physics;
         public Steering Steering;
 
+        public Vector3[] WeaponMounts;
+        
         private Input _input;
 
         private void Awake()

@@ -125,8 +125,8 @@ namespace Graphene.AutoMobileDynamics.Physics
         {
             RaycastHit hitF, hitR;
 
-            var calcF = UnityEngine.Physics.Raycast(frontAxis + _transform.up * 6, -_transform.up, out hitF, 6 + FrontWheelSize, HeightMask);
-            var calcR = UnityEngine.Physics.Raycast(rearAxis + _transform.up * 6, -_transform.up, out hitR, 6 + BackWheelSize, HeightMask);
+            var calcF = UnityEngine.Physics.Raycast(frontAxis + _transform.up * 6, -_transform.up, out hitF, 6 + FrontWheelSize*3, HeightMask);
+            var calcR = UnityEngine.Physics.Raycast(rearAxis + _transform.up * 6, -_transform.up, out hitR, 6 + BackWheelSize*3, HeightMask);
 
             var tol = 0.1f;
             var last = _transform.position;
@@ -193,7 +193,7 @@ namespace Graphene.AutoMobileDynamics.Physics
             {
                 Debug.DrawRay(frontAxis + _transform.up * 3, -_transform.up * 3, Color.cyan);
                 Debug.DrawRay(rearAxis + _transform.up * 3, -_transform.up * 3, Color.cyan);
-                _gravity += UnityEngine.Physics.gravity.y * Time.deltaTime;
+                _gravity += UnityEngine.Physics.gravity.y * Time.deltaTime * 0.02f;
                 Mathf.Min(_gravity, 1);
                 _position += Vector3.up * _gravity;
                 return;
