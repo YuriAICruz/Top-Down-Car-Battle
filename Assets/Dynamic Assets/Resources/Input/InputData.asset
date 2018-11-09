@@ -48,3 +48,30 @@ MonoBehaviour:
       hold: 0
       holdTime: 0
     Id: 16
+  - hint: Switch Weapon
+    Combo:
+    - input: 128
+      betweenMaxTime: 1.2
+      betweenMinTime: 0.2
+      down: 1
+      hold: 0
+      holdTime: 0
+    Id: 40
+  - hint: Fire On
+    Combo:
+    - input: 32
+      betweenMaxTime: 1.2
+      betweenMinTime: 0.2
+      down: 1
+      hold: 0
+      holdTime: 0
+    Id: 50
+  - hint: Fire Off
+    Combo:
+    - input: 32
+      betweenMaxTime: 1.2
+      betweenMinTime: 0.2
+      down: 0
+      hold: 0
+      holdTime: 0
+    Id: 51

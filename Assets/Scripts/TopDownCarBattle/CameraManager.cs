@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace TopDownCarBattle
+namespace Graphene.TopDownCarBattle
 {
     public class CameraManager : MonoBehaviour
     {
